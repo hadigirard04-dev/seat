@@ -12,3 +12,10 @@
 - 做了 V1 Ink（编辑部）/ V2 Console（Linear 风）/ V3 Bloom（柔和）三套可交互 UI，信息架构一致。
 - 用户选定 **V1 Ink**，已合入根目录 `index.html` + `style.css` + `app.js`；`designs/` 保留三版对照。
 - `check_demo.py` / `check_designs.py` 均 ALL_PASS。
+
+## 2026-09-28 · P0 真实状态
+
+- 新增 `scripts/scan_workspace.py`：扫描实验室 `projects/*/STATUS.md`、PLAN、compose spec，生成 `data/workspace.js`。
+- 主页面改为载入真实项目；示例数据仅在无扫描结果时兜底。
+- 已验证：`slot-next` 为 STATUS 中真实下一步；DoD 从 spec 解析 4 项；续做指令文案含真实 nextAction。
+- 仍不写回文件、不做 CLI。

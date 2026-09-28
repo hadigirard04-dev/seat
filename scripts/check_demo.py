@@ -27,8 +27,11 @@ with sync_playwright() as p:
     page.screenshot(path=str(out / "seat-demo-1280.png"), full_page=True)
 
     count_before = page.locator("#slot-count").inner_text()
-    first_unchecked = page.locator("#slot-dod input:not(:checked)").first
-    first_unchecked.check()
+    unchecked = page.locator("#slot-dod input:not(:checked)").first
+    if unchecked.count() > 0:
+        unchecked.check()
+    else:
+        page.locator("#slot-dod input").first.uncheck()
     count_after = page.locator("#slot-count").inner_text()
     assert count_before != count_after, (count_before, count_after)
     width = page.locator("#slot-fill").evaluate("el => el.style.width")
@@ -41,7 +44,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(200)
     clip = page.evaluate("() => navigator.clipboard.readText()")
     assert "seat" in clip, clip[:120]
-    assert "下一步" in clip or "只做这一件" in clip or "选定" in clip, clip[:200]
+    assert "只做这一件" in clip, clip[:200]
     results.append("T3 continue copy OK")
 
     for pid in ["continue", "verify", "retro", "handoff"]:

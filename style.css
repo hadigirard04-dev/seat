@@ -112,6 +112,27 @@ body {
   font-size: 15px;
   max-width: 52ch;
 }
+.proj-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.proj-chip {
+  appearance: none;
+  border: 1px solid rgba(22, 20, 18, 0.3);
+  background: transparent;
+  color: var(--ink-2);
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.proj-chip.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
 .band-side { text-align: right; min-width: 100px; }
 .stamp {
   display: inline-block;
