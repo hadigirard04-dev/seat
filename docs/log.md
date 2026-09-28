@@ -42,3 +42,10 @@
 
 
 - 2026-09-28 · P1 写回通道：next/log/check/apply + UI 导出
+
+## 2026-09-28 · 正式版 Out of Scope
+
+- scan_workspace 增加 timeline（docs/log）与 git（分支/近期提交）。
+- UI：时间线 + Git 面板；DoD 勾选 localStorage 持久化（按项目 id）；去掉 P1 文案。
+- 测试：scripts/test_scan_workspace.py、test_writeback.py（9 passed）；check_demo T5 覆盖面板与持久化。
+- 新增 LICENSE（MIT）、README 正式版、.github/workflows/ci.yml。

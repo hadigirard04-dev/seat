@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-09-28T22:32:00",
+  "root": "~/GitHub 小玩意",
+  "current": {
+    "title": "seat**（开工屏）— **已推送 GitHub 公开仓库",
+    "nextAction": "可选 GitHub Pages，或用 `github-project-coach` 立项下一项目。"
+  },
+  "projects": [
+    {
+      "name": "seat",
+      "path": "~/GitHub 小玩意/projects/seat",
+      "statusFile": "~/GitHub 小玩意/projects/seat/STATUS.md",
+      "stage": "正式版功能已落地（多项目切换 / 时间线 / Git / localStorage / 测试 CI）",
+      "goal": "正式版功能已落地（多项目切换 / 时间线 / Git / localStorage / 测试 CI）",
+      "nextAction": "启用 GitHub Pages 并验收公开访问",
+      "updatedLabel": "未知",
+      "dod": [
+        {
+          "id": "d1",
+          "label": "T1: 页面骨架与示例数据 — acceptance: 打开 `index.html` 可见顶栏、当前项目、下一步、DoD、指令坞、页脚，文案为中文示例 (covers: S2)",
+          "done": true
+        },
+        {
+          "id": "d2",
+          "label": "T2: DoD 勾选与进度 — acceptance: 勾选任意一项后计数与进度条立即变化，取消勾选还原 (covers: S2)",
+          "done": true
+        },
+        {
+          "id": "d3",
+          "label": "T3: 一键复制 Agent 指令 — acceptance: 点 4 个按钮之一，剪贴板得到对应中文指令，按钮显示「已复制」后恢复；含续做按钮文案含「下一步」内容 (covers: S2)",
+          "done": true
+        },
+        {
+          "id": "d4",
+          "label": "T4: 视觉与窄屏 — acceptance: 1280px 与 390px 宽度下无横向滚动、主卡片可读，深色样式完整 (covers: S2)",
+          "done": true
+        }
+      ],
+      "risk": "",
+      "timeline": [
+        {
+          "date": "2026-09-28",
+          "text": "新增 LICENSE（MIT）、README 正式版、.github/workflows/ci.yml。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "测试：scripts/test_scan_workspace.py、test_writeback.py（9 passed）；check_demo T5 覆盖面板与持久化。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "UI：时间线 + Git 面板；DoD 勾选 localStorage 持久化（按项目 id）；去掉 P1 文案。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "scan_workspace 增加 timeline（docs/log）与 git（分支/近期提交）。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "正式版 Out of Scope",
+          "kind": "section"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "P1 写回通道：next/log/check/apply + UI 导出",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "`check_demo.py` ALL_PASS；截图 `seat-p3-1280/390.png`。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "修 390px 下 stage stamp 溢出（nowrap + ellipsis + max-width）。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "衬线字体栈补 Windows（STSong/SimSun）、密度与间距统一、下一步空状态、DoD 空态、动态日期、示例/真实数据角标。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "P3 UI 打磨",
+          "kind": "section"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "已实测写入 `STATUS.md`、`docs/log.md`、`docs/compose/spec/seat-demo.md`。勾选「已是目标状态」也会报告命中文件。",
+          "kind": "item"
+        },
+        {
+          "date": "2026-09-28",
+          "text": "UI 增加写回区：复制 log 命令、导出 writeback.json、复制 apply/check 命令。",
+          "kind": "item"
+        }
+      ],
+      "git": {
+        "branch": "main",
+        "commits": [
+          {
+            "sha": "da012a6",
+            "subject": "fix: redact host paths from generated data and UI banner",
+            "date": "2026-09-28"
+          },
+          {
+            "sha": "367407e",
+            "subject": "docs: seat delivered to public GitHub repo",
+            "date": "2026-09-28"
+          },
+          {
+            "sha": "db76a0d",
+            "subject": "docs: record main merge for seat",
+            "date": "2026-09-28"
+          },
+          {
+            "sha": "996af6b",
+            "subject": "merge: seat demo P0-P3 (UI, real status, CLI, writeback, polish)",
+            "date": "2026-09-28"
+          },
+          {
+            "sha": "823db03",
+            "subject": "polish: V1 typography, empty states, 390px stamp overflow (P3)",
+            "date": "2026-09-28"
+          }
+        ],
+        "available": true
+      },
+      "id": "seat"
+    }
+  ],
+  "primaryId": "seat"
+}

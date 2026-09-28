@@ -5,4 +5,6 @@ dist/
 .vite/
 coverage/
 .gh-auth.pid
-data/
+data/*
+!data/workspace.js
+!data/workspace.json

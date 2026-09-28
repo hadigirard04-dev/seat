@@ -9,7 +9,7 @@ Read:
   python cli.py prompt continue|verify|retro|handoff
   python cli.py which
 
-Write (P1):
+Write:
   python cli.py next "新的下一步"
   python cli.py log "记一笔"
   python cli.py check "DoD 标签" [--off]
@@ -105,6 +105,11 @@ def print_project(p: dict, verbose: bool = True) -> None:
     dod = p.get("dod") or []
     done = sum(1 for d in dod if d.get("done"))
     print(f"dod     : {done}/{len(dod)}")
+    git = p.get("git") or {}
+    if git.get("available"):
+        print(f"git     : {git.get('branch')} · {len(git.get('commits') or [])} commit(s)")
+    tl = p.get("timeline") or []
+    print(f"timeline: {len(tl)} entr(ies)")
     if verbose and dod:
         for i, d in enumerate(dod, 1):
             mark = "x" if d.get("done") else " "

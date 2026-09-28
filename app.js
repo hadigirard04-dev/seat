@@ -59,6 +59,41 @@
     return document.getElementById(id)
   }
 
+  function storageKey(id) {
+    return 'seat.dod.' + id
+  }
+
+  function loadDodOverrides(projectId) {
+    try {
+      const raw = window.localStorage.getItem(storageKey(projectId))
+      if (!raw) return {}
+      const obj = JSON.parse(raw)
+      return obj && typeof obj === 'object' ? obj : {}
+    } catch (e) {
+      return {}
+    }
+  }
+
+  function saveDodOverrides(projectId, state) {
+    try {
+      const map = {}
+      state.forEach(function (d) {
+        map[d.id] = !!d.done
+      })
+      window.localStorage.setItem(storageKey(projectId), JSON.stringify(map))
+    } catch (e) {
+      /* private mode / quota — ignore */
+    }
+  }
+
+  function clearDodOverrides(projectId) {
+    try {
+      window.localStorage.removeItem(storageKey(projectId))
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
   function copyFallback(text) {
     try {
       const ta = document.createElement('textarea')
@@ -164,11 +199,13 @@
       return
     }
     active = p
+    const overrides = loadDodOverrides(p.id || p.name || 'sample')
     dodState = (p.dod || []).map(function (d) {
+      const hasOverride = Object.prototype.hasOwnProperty.call(overrides, d.id)
       return {
         id: d.id,
         label: d.label,
-        done: !!d.done,
+        done: hasOverride ? !!overrides[d.id] : !!d.done,
       }
     })
     const name = $('slot-name')
@@ -197,6 +234,60 @@
     }
     renderDod()
     renderProjectSwitcher()
+    renderTimeline(p)
+    renderGit(p)
+  }
+
+  function renderTimeline(p) {
+    const el = $('slot-timeline')
+    if (!el) return
+    const items = (p && p.timeline) || []
+    el.innerHTML = ''
+    if (!items.length) {
+      el.innerHTML = '<li class="tl-empty">暂无时间线（docs/log.md 为空或未扫描）</li>'
+      return
+    }
+    items.forEach(function (item) {
+      const li = document.createElement('li')
+      li.className = 'tl-item'
+      li.innerHTML =
+        '<span class="tl-date">' +
+        (item.date || '') +
+        '</span><span class="tl-text">' +
+        (item.text || '') +
+        '</span>'
+      el.appendChild(li)
+    })
+  }
+
+  function renderGit(p) {
+    const el = $('slot-git')
+    if (!el) return
+    const g = (p && p.git) || {}
+    el.innerHTML = ''
+    if (!g.available) {
+      el.innerHTML = '<p class="git-empty">该项目未检测到 git 仓库</p>'
+      return
+    }
+    const head = document.createElement('p')
+    head.className = 'git-branch'
+    head.textContent = '分支 ' + (g.branch || '—')
+    el.appendChild(head)
+    const list = document.createElement('ul')
+    list.className = 'git-log'
+    ;(g.commits || []).forEach(function (c) {
+      const li = document.createElement('li')
+      li.innerHTML =
+        '<span class="git-sha">' +
+        (c.sha || '') +
+        '</span><span class="git-subject">' +
+        (c.subject || '') +
+        '</span><span class="git-date">' +
+        (c.date || '') +
+        '</span>'
+      list.appendChild(li)
+    })
+    el.appendChild(list)
   }
 
   function renderEmpty() {
@@ -213,6 +304,8 @@
     }
     dodState = []
     renderDod()
+    renderTimeline(null)
+    renderGit(null)
   }
 
   function renderProjectSwitcher() {
@@ -335,6 +428,7 @@
       const li = t.closest('li')
       if (li) li.classList.toggle('is-done', item.done)
       updateProgress()
+      saveDodOverrides(active.id || active.name || 'sample', dodState)
     })
 
     $('slot-prompts').addEventListener('click', function (e) {

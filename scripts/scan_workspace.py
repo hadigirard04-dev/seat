@@ -13,11 +13,86 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def parse_timeline(project_dir: Path, limit: int = 12) -> list[dict]:
+    """Parse docs/log.md into dated timeline entries (newest first)."""
+    log = project_dir / "docs" / "log.md"
+    if not log.exists():
+        return []
+    text = read_text(log)
+    entries: list[dict] = []
+    current_date = ""
+    current_head = ""
+    for line in text.splitlines():
+        m_head = re.match(r"^##\s+(\d{4}-\d{2}-\d{2})(?:\s*[·\-–—]?\s*(.+))?$", line.strip())
+        if m_head:
+            current_date = m_head.group(1)
+            current_head = (m_head.group(2) or "").strip()
+            if current_head:
+                entries.append({"date": current_date, "text": current_head, "kind": "section"})
+            continue
+        m_item = re.match(r"^[-*+]\s+(\d{4}-\d{2}-\d{2})\s*[·\-–—]?\s*(.+)$", line.strip())
+        if m_item:
+            entries.append({"date": m_item.group(1), "text": m_item.group(2).strip(), "kind": "item"})
+            continue
+        m_bullet = re.match(r"^[-*+]\s+(.+)$", line.strip())
+        if m_bullet and current_date:
+            entries.append({"date": current_date, "text": m_bullet.group(1).strip(), "kind": "item"})
+    # newest first, stable
+    entries.reverse()
+    return entries[:limit]
+
+
+def git_info(project_dir: Path, limit: int = 5) -> dict:
+    """Read lightweight git status for a project directory (best-effort)."""
+    info = {"branch": "", "commits": [], "available": False}
+    if not project_dir.is_dir():
+        return info
+
+    def run(args: list[str]) -> str:
+        try:
+            out = subprocess.run(
+                args,
+                cwd=str(project_dir),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=5,
+                check=False,
+            )
+            return (out.stdout or "").strip() if out.returncode == 0 else ""
+        except Exception:
+            return ""
+
+    branch = run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    if not branch:
+        return info
+    info["available"] = True
+    info["branch"] = branch
+    raw = run(
+        [
+            "git",
+            "log",
+            f"-{limit}",
+            "--pretty=format:%h|%s|%ad",
+            "--date=short",
+        ]
+    )
+    commits = []
+    for line in raw.splitlines():
+        parts = line.split("|", 2)
+        if len(parts) == 3:
+            commits.append({"sha": parts[0], "subject": parts[1], "date": parts[2]})
+    info["commits"] = commits
+    return info
 
 
 def parse_bullets(text: str) -> list[str]:
@@ -109,6 +184,13 @@ def parse_status(path: Path) -> dict:
     if gm:
         goal = gm.group(1).strip()
 
+    project_dir = path.parent
+    # prefer real project root over worktree-only path for git/timeline
+    if project_dir.name == ".worktrees" or (project_dir.parent.name == ".worktrees"):
+        candidate = project_dir.parents[1] if project_dir.parent.name == ".worktrees" else project_dir.parent
+        if (candidate / "docs" / "log.md").exists() or (candidate / ".git").exists():
+            project_dir = candidate
+
     return {
         "name": name,
         "path": str(path.parent).replace("\\", "/"),
@@ -119,6 +201,8 @@ def parse_status(path: Path) -> dict:
         "updatedLabel": updated or "未知",
         "dod": dod,
         "risk": "",
+        "timeline": parse_timeline(project_dir),
+        "git": git_info(project_dir),
     }
 
 

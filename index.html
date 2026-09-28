@@ -65,7 +65,7 @@
         </div>
         <div class="prompts" id="slot-prompts"></div>
         <div class="writeback">
-          <p class="hint">写回（P1）</p>
+          <p class="hint">写回</p>
           <div class="wb-row">
             <input id="slot-wb-log" type="text" placeholder="写入 docs/log 的一句话…" />
             <button type="button" class="btn-ink wb-btn" id="slot-wb-log-btn">追加 log</button>
@@ -79,10 +79,28 @@
       </section>
     </div>
 
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>时间线</h3>
+          <p class="hint">docs/log</p>
+        </div>
+        <ul class="timeline" id="slot-timeline"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Git</h3>
+          <p class="hint">分支与近期提交</p>
+        </div>
+        <div class="git" id="slot-git"></div>
+      </section>
+    </div>
+
     <footer>
       <div class="rule"></div>
       <p id="slot-source" class="source-line" hidden></p>
-      <p>SEAT · V1 INK · 状态扫描自 STATUS/PLAN · 写回见右侧</p>
+      <p>SEAT · 开工屏 · 状态扫描自 STATUS/PLAN · DoD 勾选本地持久化</p>
     </footer>
   </div>
   <script src="./data/workspace.js"></script>

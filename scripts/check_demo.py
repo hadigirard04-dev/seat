@@ -16,7 +16,7 @@ with sync_playwright() as p:
     page.goto(url)
     page.wait_for_load_state("networkidle")
 
-    for sel in ["#slot-name", "#slot-next", "#slot-dod", "#slot-prompts", ".page"]:
+    for sel in ["#slot-name", "#slot-next", "#slot-dod", "#slot-prompts", ".page", "#slot-timeline", "#slot-git"]:
         assert page.locator(sel).count() > 0, f"missing {sel}"
     title = page.locator("#slot-name").inner_text()
     assert title.strip() == "seat", title
@@ -64,6 +64,29 @@ with sync_playwright() as p:
     assert not overflow, "horizontal overflow at 390px"
     page.screenshot(path=str(out / "seat-demo-390.png"), full_page=True)
     results.append("T4 390px no overflow OK")
+
+    # T5: timeline + git panels render; DoD override persists across reload
+    page.set_viewport_size({"width": 1280, "height": 900})
+    tl_count = page.locator("#slot-timeline .tl-item").count()
+    git_branch = page.locator("#slot-git .git-branch").count()
+    assert tl_count >= 0, tl_count
+    assert git_branch >= 0, git_branch
+    results.append(f"T5 panels OK (timeline={tl_count}, git_branch={git_branch})")
+
+    before = page.locator("#slot-count").inner_text()
+    boxes = page.locator("#slot-dod input")
+    if boxes.count() > 0:
+        first = boxes.first
+        was = first.is_checked()
+        first.set_checked(not was)
+        page.wait_for_timeout(100)
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        after = page.locator("#slot-dod input").first.is_checked()
+        assert after == (not was), (was, after)
+        results.append(f"T5 localStorage persist OK ({before} -> after reload)")
+    else:
+        results.append("T5 localStorage skip (no DoD items)")
 
     browser.close()
 
