@@ -206,6 +206,13 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     payload = json.dumps(data, ensure_ascii=False, indent=2)
+    # Do not publish absolute host paths in generated artifacts
+    root_label = root.name
+    payload = payload.replace(str(root).replace("\\", "/"), f"~/{root_label}")
+    payload = payload.replace(str(root), f"~/{root_label}")
+    # belt-and-suspenders: scrub any remaining user-profile paths
+    payload = re.sub(r"[A-Za-z]:/Users/[^\"'\s]+", "~", payload)
+    payload = re.sub(r"[A-Za-z]:\\Users\\[^\"'\s]+", "~", payload)
     (out_dir / "workspace.json").write_text(payload, encoding="utf-8")
     (out_dir / "workspace.js").write_text(
         "window.SEAT_DATA = " + payload + ";\n",

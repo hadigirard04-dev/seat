@@ -374,8 +374,9 @@
       if (banner) {
         banner.hidden = false
         banner.classList.remove('is-sample')
+        const rootLabel = (data.root || 'workspace').split(/[\\/]/).filter(Boolean).slice(-2).join('/')
         banner.textContent =
-          '真实状态 · ' + (data.root || 'workspace') + ' · 生成于 ' + (data.generatedAt || '') +
+          '真实状态 · ' + rootLabel + ' · 生成于 ' + (data.generatedAt || '') +
           ' · 刷新：python cli.py scan'
       }
       setActive(primary)
