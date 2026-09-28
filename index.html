@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seat · 开工屏</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="mast-left">
+        <p class="kicker">工作备忘 · Work Desk</p>
+        <h1>seat<span class="slash">/</span>开工屏</h1>
+      </div>
+      <div class="mast-right">
+        <p class="issue">NO. 03</p>
+        <p class="date" id="slot-date">—</p>
+      </div>
+    </header>
+    <div class="rule heavy"></div>
+
+    <section class="project-band">
+      <div class="band-label">
+        <span class="num">01</span>
+        <span class="lab">当前项目</span>
+      </div>
+      <div class="band-body">
+        <h2 id="slot-name">seat</h2>
+        <p class="goal" id="slot-goal"></p>
+        <div class="proj-switch" id="slot-projects" hidden></div>
+      </div>
+      <div class="band-side">
+        <span class="stamp" id="slot-stage"></span>
+        <p class="updated">更新 <span id="slot-updated"></span></p>
+      </div>
+    </section>
+
+    <section class="next-band">
+      <div class="band-label">
+        <span class="num">02</span>
+        <span class="lab">下一步</span>
+      </div>
+      <div class="band-body">
+        <p class="next-text" id="slot-next"></p>
+        <p class="risk" id="slot-risk" hidden></p>
+        <button type="button" class="btn-ink" id="slot-copy-continue" data-copy="continue-main">复制续做指令 →</button>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Definition of Done</h3>
+          <p class="count" id="slot-count">0 / 0</p>
+        </div>
+        <div class="progress"><div class="bar" id="slot-fill"></div></div>
+        <ul class="dod" id="slot-dod"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Agent 指令坞</h3>
+          <p class="hint">点击复制</p>
+        </div>
+        <div class="prompts" id="slot-prompts"></div>
+        <div class="writeback">
+          <p class="hint">写回（P1）</p>
+          <div class="wb-row">
+            <input id="slot-wb-log" type="text" placeholder="写入 docs/log 的一句话…" />
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-log-btn">追加 log</button>
+          </div>
+          <div class="wb-row">
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-export">导出 writeback.json</button>
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-copy">复制 apply 命令</button>
+          </div>
+          <p class="hint" id="slot-wb-msg" hidden></p>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="rule"></div>
+      <p id="slot-source" class="source-line" hidden></p>
+      <p>SEAT · V1 INK · 状态扫描自 STATUS/PLAN · 写回见右侧</p>
+    </footer>
+  </div>
+  <script src="./data/workspace.js"></script>
+  <script src="./app.js"></script>
+  <script>window.SEAT.boot()</script>
+</body>
+</html>
