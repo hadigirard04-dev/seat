@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seat · V1 Ink 编辑部</title>
+  <link rel="stylesheet" href="./v1-ink.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="mast-left">
+        <p class="kicker">工作备忘 · Work Desk</p>
+        <h1>seat<span class="slash">/</span>开工屏</h1>
+      </div>
+      <div class="mast-right">
+        <p class="issue">NO. 03</p>
+        <p class="date">2026.09.28 · 今日</p>
+      </div>
+    </header>
+    <div class="rule heavy"></div>
+
+    <section class="project-band">
+      <div class="band-label">
+        <span class="num">01</span>
+        <span class="lab">当前项目</span>
+      </div>
+      <div class="band-body">
+        <h2 id="slot-name">seat</h2>
+        <p class="goal" id="slot-goal"></p>
+      </div>
+      <div class="band-side">
+        <span class="stamp" id="slot-stage"></span>
+        <p class="updated">更新 <span id="slot-updated"></span></p>
+      </div>
+    </section>
+
+    <section class="next-band">
+      <div class="band-label">
+        <span class="num">02</span>
+        <span class="lab">下一步</span>
+      </div>
+      <div class="band-body">
+        <p class="next-text" id="slot-next"></p>
+        <p class="risk" id="slot-risk" hidden></p>
+        <button type="button" class="btn-ink" id="slot-copy-continue" data-copy="continue-main">复制续做指令 →</button>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Definition of Done</h3>
+          <p class="count" id="slot-count">0 / 0</p>
+        </div>
+        <div class="progress"><div class="bar" id="slot-fill"></div></div>
+        <ul class="dod" id="slot-dod"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Agent 指令坞</h3>
+          <p class="hint">点击复制</p>
+        </div>
+        <div class="prompts" id="slot-prompts"></div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="rule"></div>
+      <p>SEAT DEMO · 仅供视觉对比 · 不写回真实 STATUS</p>
+    </footer>
+  </div>
+  <script src="./shared.js"></script>
+  <script>window.SEAT.init()</script>
+</body>
+</html>

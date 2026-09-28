@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seat · V3 Bloom</title>
+  <link rel="stylesheet" href="./v3-bloom.css" />
+</head>
+<body>
+  <div class="sky">
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">
+          <div class="mark"></div>
+          <div>
+            <h1>seat</h1>
+            <p>今天，只推一件事</p>
+          </div>
+        </div>
+        <div class="chip-row">
+          <span class="chip soft">本地 Demo</span>
+          <span class="chip time">今天</span>
+        </div>
+      </header>
+
+      <section class="next-hero">
+        <p class="eyebrow">下一步</p>
+        <h2 id="slot-next">—</h2>
+        <p class="risk" id="slot-risk" hidden></p>
+        <button type="button" class="btn primary" id="slot-copy-continue" data-copy="continue-main">
+          复制续做指令
+        </button>
+      </section>
+
+      <section class="card project">
+        <div class="row">
+          <div>
+            <p class="eyebrow muted">当前项目</p>
+            <h3 id="slot-name"></h3>
+            <p class="goal" id="slot-goal"></p>
+          </div>
+          <div class="badges">
+            <span class="badge" id="slot-stage"></span>
+            <span class="badge quiet">更新 <span id="slot-updated"></span></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <div class="card">
+          <div class="row">
+            <div>
+              <p class="eyebrow muted">完成清单</p>
+              <p class="count" id="slot-count">0 / 0</p>
+            </div>
+            <div class="ring-wrap">
+              <div class="progress"><div class="bar" id="slot-fill"></div></div>
+            </div>
+          </div>
+          <ul class="dod" id="slot-dod"></ul>
+        </div>
+
+        <div class="card">
+          <p class="eyebrow muted">一键给 Agent</p>
+          <div class="prompts" id="slot-prompts"></div>
+        </div>
+      </section>
+
+      <footer>
+        <p>seat design study · V3 Bloom · 示例数据</p>
+      </footer>
+    </div>
+  </div>
+  <script src="./shared.js"></script>
+  <script>window.SEAT.init()</script>
+</body>
+</html>

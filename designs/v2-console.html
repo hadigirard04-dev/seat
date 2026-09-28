@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seat · V2 Console</title>
+  <link rel="stylesheet" href="./v2-console.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="logo">SE</div>
+      <nav class="rail-nav">
+        <span class="rail-item active">开工</span>
+        <span class="rail-item">项目</span>
+        <span class="rail-item">日志</span>
+      </nav>
+      <div class="rail-foot">
+        <span class="kbd">?</span>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="top">
+        <div class="crumb">
+          <span class="dim">lab</span><span class="sep">/</span><strong>seat</strong>
+          <span class="chip">local</span>
+        </div>
+        <div class="top-meta">
+          <span class="pill ok"><i></i> synced local</span>
+          <span class="mono dim">今天</span>
+        </div>
+      </header>
+
+      <section class="hero panel">
+        <div class="hero-left">
+          <p class="label"><span class="sq"></span>NEXT ACTION</p>
+          <h1 id="slot-next">—</h1>
+          <p class="risk" id="slot-risk" hidden></p>
+          <div class="hero-actions">
+            <button type="button" class="btn primary" id="slot-copy-continue" data-copy="continue-main">
+              复制续做 <span class="kbd">C</span>
+            </button>
+            <button type="button" class="btn" data-copy="verify">验收</button>
+            <button type="button" class="btn" data-copy="retro">复盘</button>
+            <button type="button" class="btn" data-copy="handoff">交接</button>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="stat">
+            <span class="stat-k">STAGE</span>
+            <span class="stat-v" id="slot-stage"></span>
+          </div>
+          <div class="stat">
+            <span class="stat-k">UPDATED</span>
+            <span class="stat-v mono" id="slot-updated"></span>
+          </div>
+          <div class="stat">
+            <span class="stat-k">DOD</span>
+            <span class="stat-v mono" id="slot-count">0 / 0</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="split">
+        <div class="panel">
+          <div class="panel-h">
+            <h2>项目</h2>
+            <span class="chip" id="slot-name"></span>
+          </div>
+          <p class="body" id="slot-goal"></p>
+          <div class="progress"><div class="bar" id="slot-fill"></div></div>
+          <ul class="dod" id="slot-dod"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-h">
+            <h2>指令坞</h2>
+            <span class="mono dim">clipboard</span>
+          </div>
+          <div class="prompts" id="slot-prompts"></div>
+          <p class="foot-note">复制后可直接粘贴到 MiMo / Codex / Claude</p>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script src="./shared.js"></script>
+  <script>window.SEAT.init()</script>
+</body>
+</html>
