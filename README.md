@@ -20,6 +20,30 @@
 
 无需安装依赖、无需构建。
 
+刷新真实状态：
+
+```bash
+python scripts/scan_workspace.py
+# 或
+python cli.py scan
+```
+
+## CLI（P2）
+
+```bash
+python cli.py              # 当前项目 + 下一步 + DoD
+python cli.py next         # 只打印下一步
+python cli.py list         # 全部项目
+python cli.py show seat    # 某个项目详情
+python cli.py prompt continue|verify|retro|handoff
+python cli.py scan         # 重新扫描 STATUS/PLAN
+python cli.py which        # 路径
+```
+
+Windows 也可用：`seat.cmd list`（等价 `python cli.py list`）。
+
+CLI **只读**（除 `scan` 写 `data/`）；不写回 STATUS。
+
 ## 操作
 
 | 操作 | 结果 |

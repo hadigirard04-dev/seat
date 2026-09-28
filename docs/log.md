@@ -19,3 +19,9 @@
 - 主页面改为载入真实项目；示例数据仅在无扫描结果时兜底。
 - 已验证：`slot-next` 为 STATUS 中真实下一步；DoD 从 spec 解析 4 项；续做指令文案含真实 nextAction。
 - 仍不写回文件、不做 CLI。
+
+## 2026-09-28 · P2 CLI
+
+- 新增 `cli.py` + `seat.cmd`：`status` / `next` / `list` / `show` / `prompt` / `scan` / `which`。
+- 只读真实 STATUS；`scan` 仅刷新 `data/`。未做写回（仍属 P1）。
+- 手测：summary / list / next / prompt continue&verify / which / seat.cmd list 均正常。
