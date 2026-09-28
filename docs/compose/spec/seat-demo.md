@@ -1,14 +1,20 @@
 ---
 feature: seat-demo
-status: designed
+status: delivered
 updated: 2026-09-28
 branch: feat/seat-demo
-commits: 
+commits: 62ed69c..ea33505
 ---
 
 # seat 可交互核心屏 Demo
 
 ## Report
+
+**What was built** — 单页可交互「开工屏」Demo：深色工作台布局，展示当前项目 / 阶段 / 下一步（含风险提示）/ DoD 清单勾选进度 / Agent 指令坞（继续做、验收、复盘、交接）一键复制。数据为内置示例工作区，不读写真实磁盘；`index.html` 可双击打开（普通 script，非 ES module）。剪贴板失败时提示保留 2s，成功「已复制」1.2s 恢复，并对连点做 timer 防抖。
+
+**Verification** — `python scripts/check_demo.py`（Playwright + system Edge）：T1 骨架 OK；T2 DoD `2/7→3/7`、进度条 `43%`；T3 续做及 4 个指令按钮复制 OK（剪贴板含项目名与「完成可交互核心屏」）；T4 390px 无横向溢出。ALL_PASS。审查发现的 critical（失败提示时长 1.2s→2s）已修复并复跑同一套脚本通过。
+
+**Journey log** — 1) `file://` + `type="module"` 导致脚本不执行，改为普通 `script` 以支持双击打开。2) Playwright 默认 Chromium 未安装，改用 `channel=\"msedge\"`。3) 审查区分了成功 1.2s / 失败 2s 的提示契约，避免「看起来能复制」掩盖失败态。
 
 ## [S1] Problem
 
@@ -50,7 +56,7 @@ commits:
 | 操作 | 行为 |
 |---|---|
 | 勾选/取消 DoD | 更新计数与进度条宽度 |
-| 点复制按钮 | 使用 `navigator.clipboard.writeText`；失败则用隐藏 `textarea` + `execCommand('copy')` 兜底；按钮文案 1.2s 后恢复 |
+| 点复制按钮 | 使用 `navigator.clipboard.writeText`；失败则用隐藏 `textarea` + `execCommand('copy')` 兜底；成功按钮文案 1.2s 后恢复；失败文案保留 2s |
 | 点「复制续做指令」 | 复制内容 = 针对「下一步」拼出的续做 prompt |
 | 键盘 | 不强制；Tab 可聚焦按钮与复选框 |
 
@@ -87,13 +93,14 @@ type AgentPrompt = {
 
 ### 错误行为
 
-- Clipboard 不可用：显示「已复制」前先尝试兜底；仍失败则按钮变为「复制失败，请手动选中」2s
+- Clipboard 不可用：显示「已复制」前先尝试兜底；仍失败则按钮变为「复制失败，请手动选中」并保留 **2s**（成功态 1.2s）
+- 同一按钮连点时清理上一次 restore timer，避免错误标签提前恢复
 - 无其他运行时错误路径（无网络、无文件 IO）
 
 ### 测试边界
 
 - Demo 阶段不要求自动化测试框架
-- 人工验收：浏览器打开 `index.html`，完成下方 Tasks 中的可观察行为
+- 人工/脚本验收：`scripts/check_demo.py`（Playwright + Edge）覆盖 T1–T4
 
 ## [S3] Out of Scope
 
@@ -106,7 +113,7 @@ type AgentPrompt = {
 
 ## Tasks
 
-- [ ] T1: 页面骨架与示例数据 — acceptance: 打开 `index.html` 可见顶栏、当前项目、下一步、DoD、指令坞、页脚，文案为中文示例 (covers: S2)
-- [ ] T2: DoD 勾选与进度 — acceptance: 勾选任意一项后计数与进度条立即变化，取消勾选还原 (covers: S2)
-- [ ] T3: 一键复制 Agent 指令 — acceptance: 点 4 个按钮之一，剪贴板得到对应中文指令，按钮显示「已复制」后恢复；含续做按钮文案含「下一步」内容 (covers: S2)
-- [ ] T4: 视觉与窄屏 — acceptance: 1280px 与 390px 宽度下无横向滚动、主卡片可读，深色样式完整 (covers: S2)
+- [x] T1: 页面骨架与示例数据 — acceptance: 打开 `index.html` 可见顶栏、当前项目、下一步、DoD、指令坞、页脚，文案为中文示例 (covers: S2)
+- [x] T2: DoD 勾选与进度 — acceptance: 勾选任意一项后计数与进度条立即变化，取消勾选还原 (covers: S2)
+- [x] T3: 一键复制 Agent 指令 — acceptance: 点 4 个按钮之一，剪贴板得到对应中文指令，按钮显示「已复制」后恢复；含续做按钮文案含「下一步」内容 (covers: S2)
+- [x] T4: 视觉与窄屏 — acceptance: 1280px 与 390px 宽度下无横向滚动、主卡片可读，深色样式完整 (covers: S2)
