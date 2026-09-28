@@ -34,4 +34,11 @@
 - UI 增加写回区：复制 log 命令、导出 writeback.json、复制 apply/check 命令。
 - 已实测写入 `STATUS.md`、`docs/log.md`、`docs/compose/spec/seat-demo.md`。勾选「已是目标状态」也会报告命中文件。
 
+## 2026-09-28 · P3 UI 打磨
+
+- 衬线字体栈补 Windows（STSong/SimSun）、密度与间距统一、下一步空状态、DoD 空态、动态日期、示例/真实数据角标。
+- 修 390px 下 stage stamp 溢出（nowrap + ellipsis + max-width）。
+- `check_demo.py` ALL_PASS；截图 `seat-p3-1280/390.png`。
+
+
 - 2026-09-28 · P1 写回通道：next/log/check/apply + UI 导出

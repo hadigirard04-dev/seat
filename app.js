@@ -114,7 +114,8 @@
     const fillEl = $('slot-fill')
     listEl.innerHTML = ''
     if (!dodState.length) {
-      listEl.innerHTML = '<li class="dod-item"><label><span class="dod-label">（该项目 STATUS/PLAN 未发现 DoD 勾选项）</span></label></li>'
+      listEl.innerHTML =
+        '<li class="dod-item"><div class="dod-empty">该项目暂无 DoD 勾选项（STATUS / PLAN / spec 里没有 [ ] 条目）</div></li>'
     } else {
       dodState.forEach(function (item, index) {
         const li = document.createElement('li')
@@ -146,7 +147,22 @@
     if (fillEl) fillEl.style.width = (total === 0 ? 0 : Math.round((done / total) * 100)) + '%'
   }
 
+  function renderDate() {
+    const el = $('slot-date')
+    if (!el) return
+    const d = new Date()
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    const week = ['日', '一', '二', '三', '四', '五', '六'][d.getDay()]
+    el.textContent = y + '.' + m + '.' + day + ' · 周' + week
+  }
+
   function setActive(p) {
+    if (!p) {
+      renderEmpty()
+      return
+    }
     active = p
     dodState = (p.dod || []).map(function (d) {
       return {
@@ -165,7 +181,11 @@
     if (goal) goal.textContent = p.goal || '（无目标描述）'
     if (stage) stage.textContent = p.stage || p.stageLabel || '—'
     if (updated) updated.textContent = p.updatedLabel || '—'
-    if (next) next.textContent = p.nextAction || '—'
+    if (next) {
+      const hasNext = !!(p.nextAction && p.nextAction.trim())
+      next.textContent = hasNext ? p.nextAction : '还没写「下一步」— 用 python cli.py next "…" 补一条'
+      next.classList.toggle('is-empty', !hasNext)
+    }
     if (risk) {
       if (p.risk) {
         risk.hidden = false
@@ -177,6 +197,22 @@
     }
     renderDod()
     renderProjectSwitcher()
+  }
+
+  function renderEmpty() {
+    const name = $('slot-name')
+    const goal = $('slot-goal')
+    const next = $('slot-next')
+    if (name) name.textContent = '没有可显示的项目'
+    if (goal) {
+      goal.textContent = '在实验室根目录执行 python cli.py scan，或确认 projects/ 下存在 STATUS.md。'
+    }
+    if (next) {
+      next.textContent = '扫描后，这里只显示一条「下一步」'
+      next.classList.add('is-empty')
+    }
+    dodState = []
+    renderDod()
   }
 
   function renderProjectSwitcher() {
@@ -323,6 +359,7 @@
   }
 
   function boot() {
+    renderDate()
     renderPrompts()
     bindEvents()
     bindWriteback()
@@ -336,7 +373,10 @@
       const banner = $('slot-source')
       if (banner) {
         banner.hidden = false
-        banner.textContent = '真实状态 · ' + (data.root || 'workspace') + ' · 生成于 ' + (data.generatedAt || '')
+        banner.classList.remove('is-sample')
+        banner.textContent =
+          '真实状态 · ' + (data.root || 'workspace') + ' · 生成于 ' + (data.generatedAt || '') +
+          ' · 刷新：python cli.py scan'
       }
       setActive(primary)
     } else {
@@ -344,7 +384,8 @@
       const banner = $('slot-source')
       if (banner) {
         banner.hidden = false
-        banner.textContent = '示例数据 · 运行 scripts/scan_workspace.py 后刷新'
+        banner.classList.add('is-sample')
+        banner.textContent = '示例数据 · 运行 python scripts/scan_workspace.py 后刷新'
       }
       setActive(sampleProject)
     }
