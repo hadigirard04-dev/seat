@@ -213,6 +213,80 @@
     })
   }
 
+  function bindWriteback() {
+    const logBtn = $('slot-wb-log-btn')
+    const exportBtn = $('slot-wb-export')
+    const copyBtn = $('slot-wb-copy')
+    const input = $('slot-wb-log')
+    const msg = $('slot-wb-msg')
+
+    function say(text) {
+      if (!msg) return
+      msg.hidden = false
+      msg.textContent = text
+    }
+
+    function payload() {
+      return {
+        next: active.nextAction || '',
+        stage: active.stage || '',
+        log: (input && input.value.trim()) || '',
+        checks: dodState.map(function (d) {
+          return { label: d.label, done: d.done }
+        }),
+        project: active.name,
+        generatedAt: new Date().toISOString(),
+      }
+    }
+
+    if (logBtn) {
+      logBtn.addEventListener('click', function () {
+        const text = (input && input.value.trim()) || ''
+        if (!text) {
+          say('先填一句 log 内容')
+          return
+        }
+        const cmd = 'python cli.py log ' + JSON.stringify(text)
+        copyText(cmd, logBtn)
+        say('已复制 log 命令，粘贴到终端执行写回')
+        if (input) input.value = ''
+      })
+    }
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', function () {
+        const blob = new Blob([JSON.stringify(payload(), null, 2)], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'writeback.json'
+        a.click()
+        URL.revokeObjectURL(url)
+        say('已下载 writeback.json — 放到 data/ 后执行 python cli.py apply')
+      })
+    }
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        const checks = dodState
+          .filter(function (d) {
+            return d.done
+          })
+          .map(function (d) {
+            return 'python cli.py check ' + JSON.stringify(d.label)
+          })
+        const lines = []
+        if (active.nextAction) {
+          lines.push('python cli.py next ' + JSON.stringify(active.nextAction))
+        }
+        lines.push.apply(lines, checks)
+        const cmd = lines.join(' && ') || 'python cli.py apply'
+        copyText(cmd, copyBtn)
+        say('已复制写回命令序列')
+      })
+    }
+  }
+
   function bindEvents() {
     $('slot-dod').addEventListener('change', function (e) {
       const t = e.target
@@ -251,6 +325,7 @@
   function boot() {
     renderPrompts()
     bindEvents()
+    bindWriteback()
     const data = window.SEAT_DATA
     if (data && data.projects && data.projects.length) {
       projects = data.projects

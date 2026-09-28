@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T21:07:46",
+  "generatedAt": "2026-09-28T21:17:23",
   "root": "C:/Users/ASUS/XiaomiMiMoProjects/GitHub 小玩意",
   "current": {
     "title": "seat**（开工屏 Demo）— 代码在 `projects/seat`，分支 `feat/seat-demo`（worktree `.worktrees/seat-demo`）。",
@@ -10,9 +10,9 @@
       "name": "seat",
       "path": "C:/Users/ASUS/XiaomiMiMoProjects/GitHub 小玩意/projects/seat/.worktrees/seat-demo",
       "statusFile": "C:/Users/ASUS/XiaomiMiMoProjects/GitHub 小玩意/projects/seat/.worktrees/seat-demo/STATUS.md",
-      "stage": "可交互核心屏 Demo — **完成**（V1 Ink 皮肤已合入主 `index.html`）",
-      "goal": "可交互核心屏 Demo — **完成**（V1 Ink 皮肤已合入主 `index.html`）",
-      "nextAction": "合并 main，或升级为真工具（读写真实 STATUS）",
+      "stage": "P2 完成 — CLI（status/list/show/prompt/scan/which）+ P0 真实状态 + V1 UI",
+      "goal": "P2 完成 — CLI（status/list/show/prompt/scan/which）+ P0 真实状态 + V1 UI",
+      "nextAction": "P1 已完成：合并 main 或做 P3",
       "updatedLabel": "未知",
       "dod": [
         {

@@ -272,6 +272,38 @@ body {
 }
 .prompt-btn.is-fail { border-color: var(--accent); }
 
+.writeback {
+  margin-top: 18px;
+  border-top: 1px solid rgba(22, 20, 18, 0.18);
+  padding-top: 14px;
+}
+.wb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+.wb-row input {
+  flex: 1;
+  min-width: 180px;
+  border: 1px solid rgba(22, 20, 18, 0.3);
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.wb-btn {
+  margin-top: 0 !important;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+#slot-wb-msg {
+  margin: 10px 0 0;
+  color: var(--accent);
+}
+
 footer {
   margin-top: 32px;
 }

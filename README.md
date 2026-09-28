@@ -42,7 +42,19 @@ python cli.py which        # 路径
 
 Windows 也可用：`seat.cmd list`（等价 `python cli.py list`）。
 
-CLI **只读**（除 `scan` 写 `data/`）；不写回 STATUS。
+## 写回（P1）
+
+```bash
+python cli.py next "新的下一步"     # 写 STATUS 下一步
+python cli.py log "今天做完了 X"    # 追加 docs/log.md
+python cli.py check "T4"            # 勾选 DoD
+python cli.py check "T4" --off      # 取消勾选
+python cli.py apply                 # 应用 data/writeback.json
+```
+
+网页「写回」区：可复制 log/apply 命令，或导出 `writeback.json` 后 `python cli.py apply`。
+
+CLI 除 `scan`/`apply`/写回命令外只读。
 
 ## 操作
 

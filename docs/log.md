@@ -25,3 +25,13 @@
 - 新增 `cli.py` + `seat.cmd`：`status` / `next` / `list` / `show` / `prompt` / `scan` / `which`。
 - 只读真实 STATUS；`scan` 仅刷新 `data/`。未做写回（仍属 P1）。
 - 手测：summary / list / next / prompt continue&verify / which / seat.cmd list 均正常。
+- 2026-09-28 · P1 写回联调测试
+- 2026-09-28 · P1 check/log/next 写回复测通过
+
+## 2026-09-28 · P1 写回
+
+- 新增 `scripts/writeback.py` 与 CLI：`next`（改 STATUS 下一步）、`log`（追加 docs/log）、`check [--off]`（改 spec/PLAN 勾选）、`apply`（吃 `data/writeback.json`）。
+- UI 增加写回区：复制 log 命令、导出 writeback.json、复制 apply/check 命令。
+- 已实测写入 `STATUS.md`、`docs/log.md`、`docs/compose/spec/seat-demo.md`。勾选「已是目标状态」也会报告命中文件。
+
+- 2026-09-28 · P1 写回通道：next/log/check/apply + UI 导出

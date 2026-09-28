@@ -1,10 +1,10 @@
 # STATUS · seat
 
-- 阶段：P2 完成 — CLI（status/list/show/prompt/scan/which）+ P0 真实状态 + V1 UI
+- 阶段：P0–P2 + **P1 写回** 完成（真实状态 / CLI / V1 UI / STATUS·log 写回）
 - 分支：`feat/seat-demo`
-- UI：V1 Ink 已合入主 `index.html`
-- 扫描：`python scripts/scan_workspace.py` → `data/workspace.js`（file:// 可用）
-- CLI：`python cli.py` / `seat.cmd`（只读，scan 除外）
-- 验证：`scripts/check_demo.py` ALL_PASS；CLI 手测 status/list/next/prompt/which 通过
-- 下一步（未做）：P1 勾选写回 STATUS/docs/log；P3 微调 UI / 空状态
-- 明确未做：写回、push、Pages、合并 main
+- UI：V1 Ink；DoD 可勾选；写回区可导出 `writeback.json` / 复制命令
+- 扫描：`python scripts/scan_workspace.py` 或 `python cli.py scan`
+- CLI 写回：`next` / `log` / `check [--off]` / `apply`
+- 验证：`check_demo.py` ALL_PASS；`next`/`log`/`check` 已实测写入 STATUS、docs/log、spec
+- 下一步：合并 main，或 P3 UI 微调
+- 明确未做：push、Pages、合并 main

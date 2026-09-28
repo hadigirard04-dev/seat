@@ -67,6 +67,18 @@
           <p class="hint">点击复制</p>
         </div>
         <div class="prompts" id="slot-prompts"></div>
+        <div class="writeback">
+          <p class="hint">写回（P1）</p>
+          <div class="wb-row">
+            <input id="slot-wb-log" type="text" placeholder="写入 docs/log 的一句话…" />
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-log-btn">追加 log</button>
+          </div>
+          <div class="wb-row">
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-export">导出 writeback.json</button>
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-copy">复制 apply 命令</button>
+          </div>
+          <p class="hint" id="slot-wb-msg" hidden></p>
+        </div>
       </section>
     </div>
 
