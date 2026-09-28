@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""UI smoke check for seat demo."""
+"""UI smoke check for seat demo (V1 Ink)."""
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -16,39 +16,36 @@ with sync_playwright() as p:
     page.goto(url)
     page.wait_for_load_state("networkidle")
 
-    # T1 skeleton
-    for sel in ["#project-title", "#next-title", "#dod-list", "#prompt-grid", ".foot"]:
+    for sel in ["#slot-name", "#slot-next", "#slot-dod", "#slot-prompts", ".page"]:
         assert page.locator(sel).count() > 0, f"missing {sel}"
-    title = page.locator("#project-title").inner_text()
+    title = page.locator("#slot-name").inner_text()
     assert title.strip() == "seat", title
+    next_text = page.locator("#slot-next").inner_text()
+    assert next_text and next_text != "—", next_text
     results.append("T1 skeleton OK")
 
     page.screenshot(path=str(out / "seat-demo-1280.png"), full_page=True)
 
-    # T2 DoD progress
-    count_before = page.locator("#dod-count").inner_text()
-    first_unchecked = page.locator("#dod-list input:not(:checked)").first
+    count_before = page.locator("#slot-count").inner_text()
+    first_unchecked = page.locator("#slot-dod input:not(:checked)").first
     first_unchecked.check()
-    count_after = page.locator("#dod-count").inner_text()
+    count_after = page.locator("#slot-count").inner_text()
     assert count_before != count_after, (count_before, count_after)
-    width = page.locator("#progress-fill").evaluate("el => el.style.width")
+    width = page.locator("#slot-fill").evaluate("el => el.style.width")
     assert width and width != "0%", width
     results.append(f"T2 dod progress OK ({count_before} -> {count_after}, width={width})")
 
-    # T3 copy buttons
     context = page.context
     context.grant_permissions(["clipboard-read", "clipboard-write"])
-    page.locator("#btn-copy-continue").click()
+    page.locator("#slot-copy-continue").click()
     page.wait_for_timeout(200)
-    label = page.locator("#btn-copy-continue").inner_text()
-    assert "已复制" in label or "复制" in label, label
     clip = page.evaluate("() => navigator.clipboard.readText()")
     assert "seat" in clip, clip[:120]
-    assert "完成可交互核心屏" in clip, clip[:200]
+    assert "下一步" in clip or "只做这一件" in clip or "选定" in clip, clip[:200]
     results.append("T3 continue copy OK")
 
     for pid in ["continue", "verify", "retro", "handoff"]:
-        btn = page.locator(f'button[data-prompt-id="{pid}"]')
+        btn = page.locator(f'button[data-copy="{pid}"]')
         btn.click()
         page.wait_for_timeout(150)
         text = page.evaluate("() => navigator.clipboard.readText()")
@@ -56,7 +53,6 @@ with sync_playwright() as p:
 
     results.append("T3 all prompt buttons OK")
 
-    # T4 narrow
     page.set_viewport_size({"width": 390, "height": 844})
     page.wait_for_timeout(100)
     overflow = page.evaluate(

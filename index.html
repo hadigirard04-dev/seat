@@ -1,75 +1,77 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>seat · 开工屏 Demo</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div class="app">
-      <header class="top">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">S</div>
-          <div class="brand-text">
-            <h1>seat</h1>
-            <p class="tagline">开工屏 · 打开就知道接着做什么</p>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seat · 开工屏</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="mast-left">
+        <p class="kicker">工作备忘 · Work Desk</p>
+        <h1>seat<span class="slash">/</span>开工屏</h1>
+      </div>
+      <div class="mast-right">
+        <p class="issue">NO. 03</p>
+        <p class="date">2026.09.28 · 今日</p>
+      </div>
+    </header>
+    <div class="rule heavy"></div>
+
+    <section class="project-band">
+      <div class="band-label">
+        <span class="num">01</span>
+        <span class="lab">当前项目</span>
+      </div>
+      <div class="band-body">
+        <h2 id="slot-name">seat</h2>
+        <p class="goal" id="slot-goal"></p>
+      </div>
+      <div class="band-side">
+        <span class="stamp" id="slot-stage"></span>
+        <p class="updated">更新 <span id="slot-updated"></span></p>
+      </div>
+    </section>
+
+    <section class="next-band">
+      <div class="band-label">
+        <span class="num">02</span>
+        <span class="lab">下一步</span>
+      </div>
+      <div class="band-body">
+        <p class="next-text" id="slot-next"></p>
+        <p class="risk" id="slot-risk" hidden></p>
+        <button type="button" class="btn-ink" id="slot-copy-continue" data-copy="continue-main">复制续做指令 →</button>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Definition of Done</h3>
+          <p class="count" id="slot-count">0 / 0</p>
         </div>
-        <div class="workspace-badge" title="示例工作区路径">
-          <span class="dot"></span>
-          <code>~/lab</code>
+        <div class="progress"><div class="bar" id="slot-fill"></div></div>
+        <ul class="dod" id="slot-dod"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Agent 指令坞</h3>
+          <p class="hint">点击复制</p>
         </div>
-      </header>
-
-      <main class="grid">
-        <section class="card project-card" aria-labelledby="project-title">
-          <div class="card-head">
-            <p class="eyebrow">当前项目</p>
-            <span class="stage stage-in-progress" id="project-stage">进行中</span>
-          </div>
-          <h2 id="project-title">—</h2>
-          <p class="goal" id="project-goal">—</p>
-          <p class="meta">最后更新：<strong id="project-updated">—</strong></p>
-        </section>
-
-        <section class="card next-card" aria-labelledby="next-title">
-          <div class="card-head">
-            <p class="eyebrow accent">下一步</p>
-            <span class="meta-inline">只做这一件</span>
-          </div>
-          <h2 id="next-title" class="next-action">—</h2>
-          <p class="risk" id="project-risk" hidden></p>
-          <button type="button" class="btn primary" id="btn-copy-continue">
-            复制续做指令
-          </button>
-        </section>
-
-        <section class="card dod-card" aria-labelledby="dod-title">
-          <div class="card-head">
-            <p class="eyebrow">Definition of Done</p>
-            <p class="dod-count" id="dod-count">0 / 0</p>
-          </div>
-          <div class="progress" aria-hidden="true">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <ul class="dod-list" id="dod-list"></ul>
-        </section>
-
-        <section class="card prompt-card" aria-labelledby="prompt-title">
-          <div class="card-head">
-            <p class="eyebrow">Agent 指令坞</p>
-            <p class="meta-inline">一键复制到剪贴板</p>
-          </div>
-          <h3 id="prompt-title" class="sr-only">可复制的 Agent 指令</h3>
-          <div class="prompt-grid" id="prompt-grid"></div>
-        </section>
-      </main>
-
-      <footer class="foot">
-        <p>Demo · 数据为示例 · 不写回真实 STATUS · seat</p>
-      </footer>
+        <div class="prompts" id="slot-prompts"></div>
+      </section>
     </div>
-    <script src="./app.js"></script>
-  </body>
+
+    <footer>
+      <div class="rule"></div>
+      <p>SEAT · V1 INK · 示例数据 · 不写回真实 STATUS</p>
+    </footer>
+  </div>
+  <script src="./app.js"></script>
+  <script>window.SEAT.init()</script>
+</body>
 </html>
