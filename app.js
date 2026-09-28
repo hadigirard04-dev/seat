@@ -48,7 +48,7 @@ const prompts = [
     label: '交接',
     hint: '给下一个会话的上下文',
     template: (p) =>
-      `交接「${p.name}」：目标是${p.goal} 阶段=${p.stageLabel}，下一步=${p.nextAction}。DoD 未完成项请列出。忽略无关工作区历史。`,
+      `交接「${p.name}」：目标是 ${p.goal} 阶段=${p.stageLabel}，下一步=${p.nextAction}。DoD 未完成项请列出。忽略无关工作区历史。`,
   },
 ]
 
@@ -143,7 +143,12 @@ function renderPrompts() {
 }
 
 async function copyText(text, button, okLabel = '已复制') {
-  const original = button.textContent
+  const original = button.dataset.originalLabel ?? button.textContent
+  button.dataset.originalLabel = original
+  if (button.dataset.restoreTimer) {
+    window.clearTimeout(Number(button.dataset.restoreTimer))
+  }
+
   let ok = false
   try {
     if (navigator.clipboard && window.isSecureContext) {
@@ -159,10 +164,13 @@ async function copyText(text, button, okLabel = '已复制') {
   button.classList.remove('copied', 'failed')
   button.classList.add(ok ? 'copied' : 'failed')
   button.textContent = ok ? okLabel : '复制失败，请手动选中'
-  window.setTimeout(() => {
+  const delay = ok ? 1200 : 2000
+  const timer = window.setTimeout(() => {
     button.classList.remove('copied', 'failed')
-    button.textContent = original
-  }, 1200)
+    button.textContent = button.dataset.originalLabel ?? original
+    delete button.dataset.restoreTimer
+  }, delay)
+  button.dataset.restoreTimer = String(timer)
   return ok
 }
 
