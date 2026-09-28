@@ -1,10 +1,8 @@
 # STATUS · seat
 
-- 阶段：P0–P3 完成（真实状态 / CLI / 写回 / V1 UI 打磨）
-- 分支：`feat/seat-demo`
-- UI：V1 Ink（衬线标题、朱砂索引、日期动态、空状态文案、390px 无溢出）
-- 扫描：`python cli.py scan`
-- CLI 写回：`next` / `log` / `check [--off]` / `apply`
-- 验证：`check_demo.py` ALL_PASS（含 P3 修复 stamp 溢出）
-- 下一步：合并 main
-- 明确未做：push、Pages、合并 main
+- 阶段：已合并 `main`（P0–P3）
+- 分支：`main`（merge commit `996af6b`；原 `feat/seat-demo`）
+- 入口：`index.html` · `cli.py` · `scan`/`writeback` 脚本
+- 验证：合并后 `check_demo.py` ALL_PASS
+- 下一步：授权后 GitHub 公开 / Pages；或立项下一项目
+- 明确未做：push、Pages
