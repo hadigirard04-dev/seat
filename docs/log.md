@@ -55,3 +55,15 @@
 - 正式版推送 ed09908，启用 GitHub Pages：https://hadigirard04-dev.github.io/seat/ （built）
 - 远程已含 timeline/git/localStorage/测试/README/LICENSE。
 - CI workflow 因 OAuth 缺 workflow scope 暂未入库；本地保留 .github/workflows/ci.yml。
+
+
+## 2026-09-29 · Pages 启用确认与公开访问验收
+
+- 核对 Pages 配置：source=`main:/`，`status=built`，`public=true`，`html_url=https://hadigirard04-dev.github.io/seat/`。
+- 最新 Pages 构建 commit `1080df0`（= origin/main tip），build 成功、无 error。
+- 无登录公开访问验收：
+  - `https://hadigirard04-dev.github.io/seat/` HTTP 200，含 `seat · 开工屏` / `slot-timeline` / `slot-git`
+  - `style.css`、`app.js`、`data/workspace.js`、`data/workspace.json`、`README.md` 均 HTTP 200
+  - 仓库页 https://github.com/hadigirard04-dev/seat HTTP 200（visibility=public）
+- 本地 `main` 领先 origin/main 7 个提交（seat-plain-ux / seat-plan-ui），本轮未授权 push，未推送、未改动 Pages 源。
+- 未做：CI workflow 入库、Release、其他功能改动。

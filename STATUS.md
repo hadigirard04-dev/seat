@@ -1,10 +1,11 @@
-# STATUS · seat
+﻿# STATUS · seat
 
-- 阶段：正式版已部署 GitHub Pages
+- 阶段：正式版已部署 GitHub Pages，公开访问已验收；本地 UI 提交已推送
 - 仓库：https://github.com/hadigirard04-dev/seat （PUBLIC）
-- Pages：https://hadigirard04-dev.github.io/seat/ （status=built）
-- 交付 commit：`ed09908`
+- Pages：https://hadigirard04-dev.github.io/seat/
+- 已推送提交：`1080df0..9b78be5`（plain-ux / plan-ui）
 - 入口：`index.html` · `cli.py` · `scan`/`writeback`
 - 验证：`scripts/test_*.py` 9 passed；`check_demo.py` ALL_PASS（含 T5 localStorage）
-- 下一步：补推 `.github/workflows/ci.yml`（需 gh `workflow` scope）并跑通 CI
-- 明确未做：账号 / 云同步 / 后端（本地优先）；CI 配置已写好但尚未进入远程仓库
+- Pages 验收（2026-09-29）：无登录访问均 HTTP 200；页面含 slot-timeline、slot-git
+- 下一步：推送 `.github/workflows/ci.yml` 并确认 Actions；发布 Release
+- 明确未做：账号 / 云同步 / 后端（本地优先）
