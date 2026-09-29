@@ -171,7 +171,7 @@ def parse_plan(text: str) -> dict | None:
     days: list[dict] = []
     if days_body:
         for ln in days_body.splitlines():
-            m = re.match(r"^[-*+]\s*(Day\s*\d+|第\s*\d+\s*天)\s*[：:：]?\s*(.+)$", ln.strip(), re.I)
+            m = re.match(r"^[-*+]\s*(Day\s*\d+|第\s*\d+\s*天)\s*(?:[：:]\s*)?(.+)$", ln.strip(), re.I)
             if m:
                 days.append({"label": m.group(1).strip(), "text": m.group(2).strip()})
 
@@ -244,10 +244,24 @@ def parse_status(path: Path) -> dict:
                 next_action = re.sub(r"^[-*+]\s+", "", line.strip())
                 break
 
+    project_dir = path.parent
+    # prefer real project root over worktree-only path for git/timeline
+    if project_dir.name == ".worktrees" or (project_dir.parent.name == ".worktrees"):
+        candidate = project_dir.parents[1] if project_dir.parent.name == ".worktrees" else project_dir.parent
+        if (candidate / "docs" / "log.md").exists() or (candidate / ".git").exists():
+            project_dir = candidate
+
+    def find_plan_file() -> Path | None:
+        for base in (path.parent, project_dir):
+            p = base / "PLAN.md"
+            if p.exists():
+                return p
+        return None
+
+    plan_file = find_plan_file()
     dod = parse_dod(text)
-    plan = path.parent / "PLAN.md"
-    if not dod and plan.exists():
-        dod = parse_dod(read_text(plan))
+    if not dod and plan_file:
+        dod = parse_dod(read_text(plan_file))
     if not dod:
         spec_dir = path.parent / "docs" / "compose" / "spec"
         if spec_dir.is_dir():
@@ -261,15 +275,7 @@ def parse_status(path: Path) -> dict:
     if gm:
         goal = gm.group(1).strip()
 
-    project_dir = path.parent
-    # prefer real project root over worktree-only path for git/timeline
-    if project_dir.name == ".worktrees" or (project_dir.parent.name == ".worktrees"):
-        candidate = project_dir.parents[1] if project_dir.parent.name == ".worktrees" else project_dir.parent
-        if (candidate / "docs" / "log.md").exists() or (candidate / ".git").exists():
-            project_dir = candidate
-
-    plan_path = project_dir / "PLAN.md"
-    plan_info = parse_plan(read_text(plan_path)) if plan_path.exists() else None
+    plan_info = parse_plan(read_text(plan_file)) if plan_file else None
 
     return {
         "name": name,

@@ -121,6 +121,28 @@ class ParsePlanTests(unittest.TestCase):
     def test_missing_is_none(self):
         self.assertIsNone(sw.parse_plan(""))
 
+    def test_day_without_text_edge(self):
+        plan = sw.parse_plan("## 目标\n\nx\n\n## 3-Day Plan\n\n- Day 1：\n")
+        self.assertIsNotNone(plan)
+        self.assertEqual(plan["days"][0]["text"].strip("：:"), "")
+
+    def test_worktree_plan_fallback(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            proj = root / "projects" / "demo"
+            wt = proj / ".worktrees" / "demo-feat"
+            wt.mkdir(parents=True)
+            (wt / "STATUS.md").write_text(
+                "# STATUS · demo\n\n- 阶段：进行中\n\n## 下一步\n\n写测试\n", encoding="utf-8"
+            )
+            (wt / "PLAN.md").write_text(
+                "# PLAN\n\n## 目标\n\nworktree 目标\n", encoding="utf-8"
+            )
+            data = sw.scan(root)
+            self.assertEqual(len(data["projects"]), 1)
+            self.assertIsNotNone(data["projects"][0].get("plan"))
+            self.assertIn("worktree", data["projects"][0]["plan"]["goal"])
+
 
 class PayloadShapeTests(unittest.TestCase):
     def test_json_roundtrip(self):
