@@ -1,14 +1,22 @@
 ﻿---
 feature: seat-plan-ui
-status: in-progress
+status: delivered
 updated: 2026-09-29
 branch: feat/seat-plan-ui
-commits: 
+commits: 25a45a8..82f4ce6
 ---
 
 # 规划上屏
 
 ## Report
+
+## Report
+
+**What was built** — 开工屏新增「03 规划」区：解析各项目 `PLAN.md` 的目标、MVP（要做的/不做的）、三天安排与第一件事，在「今天先做」下方只读展示；无 PLAN 时给出口语空态。扫描支持 worktree 与项目根两处找 PLAN。
+
+**Verification** — `python -m unittest discover -s scripts -p "test_*.py"` 14 passed（含 worktree PLAN 回退）；`scripts/check_demo.py` ALL_PASS（plan goal=True, empty=True）。独立复审：critical 已修，ready-to-merge。
+
+**Journey log** — 1) 禁词断言扫 body 会误伤数据正文。2) `display:flex` 需配合 `[hidden]{display:none!important}`。3) PLAN 查找顺序 worktree → 项目根，与 DoD 共用路径。
 
 ## [S1] Problem
 
@@ -76,8 +84,9 @@ plan: {
 
 ## Tasks
 
-- [ ] T1: scan 解析 PLAN.md — acceptance: 有 PLAN 的项目 `plan.goal/mvp/days` 正确；无 PLAN 为 null (covers: S2)
-- [ ] T2: 03 规划 UI — acceptance: 展示目标、MVP 要做/不做、Day 列表；切换项目随之变化 (covers: S2)
-- [ ] T3: 空态 — acceptance: 无 plan 时显示口语空态，不报错 (covers: S2)
-- [ ] T4: 测试 — acceptance: unit + check_demo 覆盖上列并通过 (covers: S2; depends: T1, T2, T3)
+- [x] T1: scan 解析 PLAN.md — acceptance: 有 PLAN 的项目 `plan.goal/mvp/days` 正确；无 PLAN 为 null (covers: S2)
+- [x] T2: 03 规划 UI — acceptance: 展示目标、MVP 要做/不做、Day 列表；切换项目随之变化 (covers: S2)
+- [x] T3: 空态 — acceptance: 无 plan 时显示口语空态，不报错 (covers: S2)
+- [x] T4: 测试 — acceptance: unit + check_demo 覆盖上列并通过 (covers: S2; depends: T1, T2, T3)
+
 
