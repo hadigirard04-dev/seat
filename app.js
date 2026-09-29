@@ -310,17 +310,19 @@
 
   function renderProjectSwitcher() {
     const el = $('slot-projects')
+    const picker = $('slot-project-picker')
     if (!el) return
-    if (projects.length <= 1) {
-      el.hidden = true
+    if (!projects.length) {
+      if (picker) picker.hidden = true
       return
     }
-    el.hidden = false
+    if (picker) picker.hidden = false
     el.innerHTML = ''
     projects.forEach(function (p) {
       const b = document.createElement('button')
       b.type = 'button'
       b.className = 'proj-chip' + (p.id === active.id ? ' is-active' : '')
+      b.setAttribute('aria-pressed', p.id === active.id ? 'true' : 'false')
       b.textContent = p.name
       b.addEventListener('click', function () {
         setActive(p)
