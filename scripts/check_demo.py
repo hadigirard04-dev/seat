@@ -127,6 +127,26 @@ with sync_playwright() as p:
     page.wait_for_timeout(100)
     page.screenshot(path=str(out / "seat-plain-ux-390.png"), full_page=True)
 
+    # T7: plan band
+    page.set_viewport_size({"width": 1280, "height": 900})
+    assert page.locator("#slot-plan-band").count() > 0
+    plan_text = page.locator("#slot-plan").inner_text()
+    chips = page.locator(".proj-chip")
+    # find a project with plan content or empty state
+    found_plan = "要做的" in plan_text or "目标" in plan_text or plan_text.strip().startswith("第一件事")
+    if chips.count() > 1:
+        for i in range(chips.count()):
+            chips.nth(i).click()
+            page.wait_for_timeout(150)
+            plan_text = page.locator("#slot-plan").inner_text()
+            if "要做的" in plan_text or "命令行" in plan_text or "Day" in plan_text or "第一件事" in plan_text:
+                found_plan = True
+                break
+    assert found_plan or "还没有规划" in page.locator("#slot-plan").inner_text()
+    assert page.locator("#slot-plan-band .lab").inner_text().strip() == "规划"
+    results.append(f"T7 plan band OK ({plan_text[:40]!r})")
+    page.screenshot(path=str(out / "seat-plan-ui-1280.png"), full_page=True)
+
     browser.close()
 
 print("\n".join(results))

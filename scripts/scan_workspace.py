@@ -118,6 +118,83 @@ def parse_dod(text: str) -> list[dict]:
     return dod
 
 
+def _section(text: str, heading: str) -> str:
+    m = re.search(
+        rf"^##\s*{re.escape(heading)}\s*(?:（[^）]*）|\([^)]*\))?\s*\n+([\s\S]+?)(?:\n##\s|\Z)",
+        text,
+        re.M,
+    )
+    return m.group(1).strip() if m else ""
+
+
+def parse_plan(text: str) -> dict | None:
+    """Parse PLAN.md into goal / MVP / days / firstTask. None if empty."""
+    goal_body = _section(text, "目标")
+    goal = ""
+    if goal_body:
+        for ln in goal_body.splitlines():
+            ln = ln.strip()
+            if ln:
+                goal = re.sub(r"^[-*+]\s+", "", ln)
+                break
+
+    mvp_body = _section(text, "MVP")
+    mvp_core: list[str] = []
+    mvp_out: list[str] = []
+    if mvp_body:
+        mode = ""
+        for ln in mvp_body.splitlines():
+            s = ln.strip()
+            if not s:
+                continue
+            m_core = re.match(r"^[-*+]?\s*核心[：:]\s*(.*)$", s)
+            m_out = re.match(r"^[-*+]?\s*不做[：:]\s*(.*)$", s)
+            if m_core:
+                mode = "core"
+                rest = m_core.group(1).strip()
+                if rest:
+                    mvp_core.extend([x.strip() for x in re.split(r"[、,，/]", rest) if x.strip()])
+                continue
+            if m_out:
+                mode = "out"
+                rest = m_out.group(1).strip()
+                if rest:
+                    mvp_out.extend([x.strip() for x in re.split(r"[、,，/]", rest) if x.strip()])
+                continue
+            item = re.sub(r"^[-*+]\s+", "", s)
+            if mode == "core":
+                mvp_core.append(item)
+            elif mode == "out":
+                mvp_out.append(item)
+
+    days_body = _section(text, "3-Day Plan")
+    days: list[dict] = []
+    if days_body:
+        for ln in days_body.splitlines():
+            m = re.match(r"^[-*+]\s*(Day\s*\d+|第\s*\d+\s*天)\s*[：:：]?\s*(.+)$", ln.strip(), re.I)
+            if m:
+                days.append({"label": m.group(1).strip(), "text": m.group(2).strip()})
+
+    first_body = _section(text, "First Task")
+    first_task = ""
+    if first_body:
+        for ln in first_body.splitlines():
+            ln = ln.strip()
+            if ln:
+                first_task = re.sub(r"^[-*+]\s+", "", ln)
+                break
+
+    if not any([goal, mvp_core, mvp_out, days, first_task]):
+        return None
+    return {
+        "goal": goal,
+        "mvpCore": mvp_core,
+        "mvpOut": mvp_out,
+        "days": days,
+        "firstTask": first_task,
+    }
+
+
 def parse_status(path: Path) -> dict:
     text = read_text(path)
     name = path.parent.name
@@ -191,6 +268,9 @@ def parse_status(path: Path) -> dict:
         if (candidate / "docs" / "log.md").exists() or (candidate / ".git").exists():
             project_dir = candidate
 
+    plan_path = project_dir / "PLAN.md"
+    plan_info = parse_plan(read_text(plan_path)) if plan_path.exists() else None
+
     return {
         "name": name,
         "path": str(path.parent).replace("\\", "/"),
@@ -203,6 +283,7 @@ def parse_status(path: Path) -> dict:
         "risk": "",
         "timeline": parse_timeline(project_dir),
         "git": git_info(project_dir),
+        "plan": plan_info,
     }
 
 

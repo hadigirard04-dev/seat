@@ -236,6 +236,71 @@
     renderProjectSwitcher()
     renderTimeline(p)
     renderGit(p)
+    renderPlan(p)
+  }
+
+  function renderPlan(p) {
+    const el = $('slot-plan')
+    if (!el) return
+    const plan = (p && p.plan) || null
+    if (!plan) {
+      el.innerHTML =
+        '<p class="plan-empty">还没有规划 — 在项目里建 PLAN.md（目标 / MVP / 三天），这里就会显示</p>'
+      return
+    }
+    const parts = []
+    if (plan.goal) {
+      parts.push('<p class="plan-goal"></p>')
+    }
+    const core = plan.mvpCore || []
+    const out = plan.mvpOut || []
+    if (core.length || out.length) {
+      parts.push(
+        '<div class="plan-mvp">' +
+          '<div class="plan-col"><h4>要做的</h4><ul class="plan-list plan-core"></ul></div>' +
+          '<div class="plan-col"><h4>不做的</h4><ul class="plan-list plan-out"></ul></div>' +
+          '</div>'
+      )
+    }
+    const days = plan.days || []
+    if (days.length) {
+      parts.push('<div class="plan-days"></div>')
+    }
+    if (plan.firstTask) {
+      parts.push('<p class="plan-first"></p>')
+    }
+    el.innerHTML = parts.join('')
+    const goalEl = el.querySelector('.plan-goal')
+    if (goalEl) goalEl.textContent = plan.goal
+    const coreEl = el.querySelector('.plan-core')
+    if (coreEl) {
+      core.forEach(function (t) {
+        const li = document.createElement('li')
+        li.textContent = t
+        coreEl.appendChild(li)
+      })
+    }
+    const outEl = el.querySelector('.plan-out')
+    if (outEl) {
+      out.forEach(function (t) {
+        const li = document.createElement('li')
+        li.textContent = t
+        outEl.appendChild(li)
+      })
+    }
+    const daysEl = el.querySelector('.plan-days')
+    if (daysEl) {
+      days.forEach(function (d) {
+        const row = document.createElement('div')
+        row.className = 'plan-day'
+        row.innerHTML = '<span class="plan-day-label"></span><span class="plan-day-text"></span>'
+        row.querySelector('.plan-day-label').textContent = d.label
+        row.querySelector('.plan-day-text').textContent = d.text
+        daysEl.appendChild(row)
+      })
+    }
+    const firstEl = el.querySelector('.plan-first')
+    if (firstEl) firstEl.textContent = '第一件事：' + plan.firstTask
   }
 
   function renderTimeline(p) {
@@ -306,6 +371,7 @@
     renderDod()
     renderTimeline(null)
     renderGit(null)
+    renderPlan(null)
   }
 
   function parseDay(s) {

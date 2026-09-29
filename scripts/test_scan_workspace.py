@@ -82,6 +82,46 @@ class ScanSmokeTests(unittest.TestCase):
             self.assertEqual(p["timeline"][0]["text"], "boot")
 
 
+class ParsePlanTests(unittest.TestCase):
+    SAMPLE = """# PLAN · demo
+
+## 目标
+
+用命令行快速记一条 Markdown 笔记。
+
+## MVP
+
+- 核心：notes add、notes list
+- 不做：云同步、GUI
+
+## 3-Day Plan
+
+- Day 1：add / list
+- Day 2：标签搜索
+- Day 3：README 与公开仓库
+
+## First Task
+
+实现 notes add
+"""
+
+    def test_full_plan(self):
+        plan = sw.parse_plan(self.SAMPLE)
+        self.assertIsNotNone(plan)
+        self.assertIn("命令行", plan["goal"])
+        self.assertIn("notes add", plan["mvpCore"])
+        self.assertIn("云同步", plan["mvpOut"])
+        self.assertEqual(len(plan["days"]), 3)
+        self.assertEqual(plan["days"][0]["label"].lower().replace(" ", ""), "day1")
+        self.assertIn("notes add", plan["firstTask"])
+
+    def test_empty_plan(self):
+        self.assertIsNone(sw.parse_plan("# PLAN\n\n## 目标\n"))
+
+    def test_missing_is_none(self):
+        self.assertIsNone(sw.parse_plan(""))
+
+
 class PayloadShapeTests(unittest.TestCase):
     def test_json_roundtrip(self):
         sample = {
