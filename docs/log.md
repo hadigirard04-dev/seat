@@ -49,3 +49,9 @@
 - UI：时间线 + Git 面板；DoD 勾选 localStorage 持久化（按项目 id）；去掉 P1 文案。
 - 测试：scripts/test_scan_workspace.py、test_writeback.py（9 passed）；check_demo T5 覆盖面板与持久化。
 - 新增 LICENSE（MIT）、README 正式版、.github/workflows/ci.yml。
+
+## 2026-09-28 · Pages 部署
+
+- 正式版推送 ed09908，启用 GitHub Pages：https://hadigirard04-dev.github.io/seat/ （built）
+- 远程已含 timeline/git/localStorage/测试/README/LICENSE。
+- CI workflow 因 OAuth 缺 workflow scope 暂未入库；本地保留 .github/workflows/ci.yml。
