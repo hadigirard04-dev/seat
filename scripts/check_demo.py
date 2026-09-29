@@ -127,6 +127,29 @@ with sync_playwright() as p:
     page.wait_for_timeout(100)
     page.screenshot(path=str(out / "seat-plain-ux-390.png"), full_page=True)
 
+    # plan band: content on a planned project + empty state on an unplanned one
+    page.set_viewport_size({"width": 1280, "height": 900})
+    assert page.locator("#slot-plan-band").count() > 0
+    assert page.locator("#slot-plan-band .lab").inner_text().strip() == "规划"
+    chips = page.locator(".proj-chip")
+    saw_goal = False
+    saw_empty = False
+    for i in range(chips.count()):
+        chips.nth(i).click()
+        page.wait_for_timeout(150)
+        plan_text = page.locator("#slot-plan").inner_text()
+        if "还没有规划" in plan_text:
+            saw_empty = True
+        if ("要做的" in plan_text or "Day" in plan_text) and len(plan_text.strip()) > 30:
+            saw_goal = True
+            assert "第一件事" in plan_text or "Day" in plan_text, plan_text[:80]
+    # single-project worlds may only have one state; require the state that exists to be correct
+    assert saw_goal or saw_empty or "还没有规划" in page.locator("#slot-plan").inner_text()
+    if chips.count() >= 2:
+        assert saw_goal and saw_empty, (saw_goal, saw_empty)
+    results.append(f"plan band OK (goal={saw_goal}, empty={saw_empty})")
+    page.screenshot(path=str(out / "seat-plan-ui-1280.png"), full_page=True)
+
     browser.close()
 
 print("\n".join(results))

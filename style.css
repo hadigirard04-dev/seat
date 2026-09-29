@@ -245,6 +245,69 @@ body {
   letter-spacing: 0.04em;
 }
 
+/* plan band (03) */
+.plan-band {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 20px;
+  padding: 22px 0 24px;
+  border-bottom: 1px solid rgba(20, 18, 16, 0.16);
+}
+.plan-goal {
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.55;
+  max-width: 52ch;
+}
+.plan-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.plan-mvp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.plan-col h4 {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.plan-list {
+  margin: 0;
+  padding-left: 1.1em;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.plan-day {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.plan-day-label {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.plan-day-text {
+  color: var(--ink-2);
+}
+.plan-first {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
 /* first-run onboarding */
 .onboard {
   margin: 0 0 8px;
@@ -595,7 +658,8 @@ footer p {
   .page { padding: 28px 18px 40px; }
   .project-band,
   .next-band,
-  .project-picker {
+  .project-picker,
+  .plan-band {
     grid-template-columns: 1fr;
     gap: 12px;
   }
