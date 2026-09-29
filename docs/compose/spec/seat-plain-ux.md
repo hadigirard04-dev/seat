@@ -1,15 +1,20 @@
 ﻿---
 feature: seat-plain-ux
-status: in-progress
+status: delivered
 updated: 2026-09-29
 branch: feat/seat-plain-ux
-commits: 
----
+commits: 1080df0..dffb922`n---
 
 # seat 人话化与好上手
 
+## Report\n
 ## Report
 
+**What was built** — 开工屏全面人话化：完成清单 / 交给 AI / 保存进度 / 今天先做；项目 chip 带就绪度标签（今天/本周/放一放/已收尾/被卡住）；首次打开三步引导（知道了后本机不再提示，`?onboard=1` 可强制再现）。V1 Ink 视觉与扫描/CLI 契约不变。
+
+**Verification** — `scripts/check_demo.py` ALL_PASS（T1 术语与焦点、T2 进度、T3 复制、T4 390px、T5 localStorage、T6 引导与标签）；`python -m unittest discover -s scripts -p "test_*.py"` 9 passed。独立审查：Spec compliance PASS，无 critical，ready to merge。
+
+**Journey log** — 1) `display:flex` 会盖掉 `[hidden]`，需 `.onboard[hidden]{display:none!important}`。2) 禁词断言不能扫整个 body（数据 log 里会含旧词），只约束界面固定文案。3) 时间线约定 newest-first，就绪度取 timeline[0]。
 ## [S1] Problem
 
 用户打开开工屏后看不懂在做什么、怎么用。界面充斥内部术语（Definition of Done、Agent 指令坞、写回），没有「今天先做什么」的焦点，项目列表看不出谁在推进/谁被搁置，也没有首次使用说明。多项目切换刚做完，但心智负担仍在。
@@ -94,9 +99,10 @@ commits:
 
 ## Tasks
 
-- [ ] T1: 全站术语人话替换 — acceptance: 页面与按钮不再出现 Definition of Done / Agent 指令坞 / 写回 / writeback 等词；引导与页脚为中文口语 (covers: S2)
-- [ ] T2: 今天先做焦点区 — acceptance: 主行动区标题为「今天先做」，空态口语提示，主按钮复制续做指令 (covers: S2)
-- [ ] T3: 项目状态标签 — acceptance: 多项目时 chip 带今天/本周/放一放/已收尾/被卡住/— 之一，规则与 S2 表一致 (covers: S2)
-- [ ] T4: 首开三步引导 — acceptance: 无 onboarded 时显示引导；点「知道了」刷新后不再显示；`?onboard=1` 可再现 (covers: S2)
-- [ ] T5: 验收脚本 — acceptance: `check_demo.py` 新增上述断言并 ALL_PASS；`test_*.py` 通过 (covers: S2; depends: T1, T2, T3, T4)
+- [x] T1: 全站术语人话替换 — acceptance: 页面与按钮不再出现 Definition of Done / Agent 指令坞 / 写回 / writeback 等词；引导与页脚为中文口语 (covers: S2)
+- [x] T2: 今天先做焦点区 — acceptance: 主行动区标题为「今天先做」，空态口语提示，主按钮复制续做指令 (covers: S2)
+- [x] T3: 项目状态标签 — acceptance: 多项目时 chip 带今天/本周/放一放/已收尾/被卡住/— 之一，规则与 S2 表一致 (covers: S2)
+- [x] T4: 首开三步引导 — acceptance: 无 onboarded 时显示引导；点「知道了」刷新后不再显示；`?onboard=1` 可再现 (covers: S2)
+- [x] T5: 验收脚本 — acceptance: `check_demo.py` 新增上述断言并 ALL_PASS；`test_*.py` 通过 (covers: S2; depends: T1, T2, T3, T4)
+
 

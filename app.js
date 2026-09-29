@@ -299,7 +299,7 @@
       goal.textContent = '先运行 python cli.py scan 扫一下项目，或确认 projects/ 里有 STATUS。'
     }
     if (next) {
-      next.textContent = '扫描后，这里只显示一条「下一步」'
+      next.textContent = '扫描后，这里只显示「今天先做」'
       next.classList.add('is-empty')
     }
     dodState = []
