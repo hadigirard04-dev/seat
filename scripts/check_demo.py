@@ -22,7 +22,23 @@ with sync_playwright() as p:
     assert title.strip() == "seat", title
     next_text = page.locator("#slot-next").inner_text()
     assert next_text and next_text != "—", next_text
-    results.append("T1 skeleton OK")
+    chrome = " ".join(
+        [
+            page.inner_text("header"),
+            page.inner_text(".project-picker"),
+            page.inner_text(".next-band"),
+            page.inner_text(".two-col"),
+            page.inner_text("footer"),
+        ]
+    )
+    # 项目数据正文可能含历史词，只约束界面固定文案
+    for banned in ["Definition of Done", "Agent 指令坞", "点击复制", "续做指令"]:
+        assert banned not in chrome, f"banned UI term still visible: {banned}"
+    assert "完成清单" in chrome
+    assert "交给 AI" in chrome
+    assert "今天先做" in chrome
+    assert "保存进度" in chrome
+    results.append("T1 skeleton + plain language OK")
 
     page.screenshot(path=str(out / "seat-demo-1280.png"), full_page=True)
 
@@ -87,6 +103,29 @@ with sync_playwright() as p:
         results.append(f"T5 localStorage persist OK ({before} -> after reload)")
     else:
         results.append("T5 localStorage skip (no DoD items)")
+
+    # T6: onboarding + project badges
+    page.goto(url + "?onboard=1")
+    page.wait_for_load_state("networkidle")
+    assert page.locator("#slot-onboard").is_visible(), "onboard should show with ?onboard=1"
+    assert page.locator("#slot-onboard-ok").is_visible()
+    page.locator("#slot-onboard-ok").click()
+    page.wait_for_timeout(100)
+    assert page.locator("#slot-onboard").is_hidden(), "onboard should hide after 知道了"
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+    assert page.locator("#slot-onboard").is_hidden(), "onboard stays hidden after dismiss"
+    badges = page.locator(".proj-badge")
+    assert badges.count() >= 1, "project badges missing"
+    badge_texts = [badges.nth(i).inner_text() for i in range(badges.count())]
+    for t in badge_texts:
+        assert t in ("今天", "本周", "放一放", "已收尾", "被卡住", "—"), t
+    results.append(f"T6 onboard + badges OK ({badge_texts})")
+
+    page.screenshot(path=str(out / "seat-plain-ux-1280.png"), full_page=True)
+    page.set_viewport_size({"width": 390, "height": 844})
+    page.wait_for_timeout(100)
+    page.screenshot(path=str(out / "seat-plain-ux-390.png"), full_page=True)
 
     browser.close()
 

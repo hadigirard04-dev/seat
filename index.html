@@ -29,9 +29,18 @@
         <span class="lab">项目</span>
       </div>
       <div class="picker-body">
-        <p class="picker-hint">先选项目，下面显示它的进度</p>
+        <p class="picker-hint">选一个项目，下面就是它的进度</p>
         <div class="proj-switch" id="slot-projects"></div>
       </div>
+    </section>
+
+    <section class="onboard" id="slot-onboard" hidden>
+      <ol class="onboard-steps">
+        <li><strong>选项目</strong> — 点上面的名字切换</li>
+        <li><strong>看今天先做</strong> — 只做这一件</li>
+        <li><strong>复制给 AI</strong> — 点黑色按钮，粘到 MiMo / Claude</li>
+      </ol>
+      <button type="button" class="btn-ink onboard-ok" id="slot-onboard-ok">知道了</button>
     </section>
 
     <section class="project-band">
@@ -52,19 +61,19 @@
     <section class="next-band">
       <div class="band-label">
         <span class="num">02</span>
-        <span class="lab">下一步</span>
+        <span class="lab">今天先做</span>
       </div>
       <div class="band-body">
         <p class="next-text" id="slot-next"></p>
         <p class="risk" id="slot-risk" hidden></p>
-        <button type="button" class="btn-ink" id="slot-copy-continue" data-copy="continue-main">复制续做指令 →</button>
+        <button type="button" class="btn-ink" id="slot-copy-continue" data-copy="continue-main">复制「接着做」指令</button>
       </div>
     </section>
 
     <div class="two-col">
       <section class="panel">
         <div class="panel-head">
-          <h3>Definition of Done</h3>
+          <h3>完成清单</h3>
           <p class="count" id="slot-count">0 / 0</p>
         </div>
         <div class="progress"><div class="bar" id="slot-fill"></div></div>
@@ -73,19 +82,19 @@
 
       <section class="panel">
         <div class="panel-head">
-          <h3>Agent 指令坞</h3>
-          <p class="hint">点击复制</p>
+          <h3>交给 AI</h3>
+          <p class="hint">点一下复制</p>
         </div>
         <div class="prompts" id="slot-prompts"></div>
         <div class="writeback">
-          <p class="hint">写回</p>
+          <p class="hint">保存进度</p>
           <div class="wb-row">
-            <input id="slot-wb-log" type="text" placeholder="写入 docs/log 的一句话…" />
-            <button type="button" class="btn-ink wb-btn" id="slot-wb-log-btn">追加 log</button>
+            <input id="slot-wb-log" type="text" placeholder="记一笔今天做了什么…" />
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-log-btn">记一笔</button>
           </div>
           <div class="wb-row">
-            <button type="button" class="btn-ink wb-btn" id="slot-wb-export">导出 writeback.json</button>
-            <button type="button" class="btn-ink wb-btn" id="slot-wb-copy">复制 apply 命令</button>
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-export">导出进度文件</button>
+            <button type="button" class="btn-ink wb-btn" id="slot-wb-copy">复制保存命令</button>
           </div>
           <p class="hint" id="slot-wb-msg" hidden></p>
         </div>
@@ -96,7 +105,7 @@
       <section class="panel">
         <div class="panel-head">
           <h3>时间线</h3>
-          <p class="hint">docs/log</p>
+          <p class="hint">最近做过</p>
         </div>
         <ul class="timeline" id="slot-timeline"></ul>
       </section>
@@ -113,7 +122,7 @@
     <footer>
       <div class="rule"></div>
       <p id="slot-source" class="source-line" hidden></p>
-      <p>SEAT · 开工屏 · 状态扫描自 STATUS/PLAN · DoD 勾选本地持久化</p>
+      <p>SEAT · 开工屏 · 数据来自各项目 STATUS · 勾选保存在本机</p>
     </footer>
   </div>
   <script src="./data/workspace.js"></script>
