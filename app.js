@@ -3,7 +3,7 @@
   const sampleProject = {
     id: 'sample',
     name: 'seat',
-    goal: '打开电脑后的第一屏：当前项目、下一步、DoD、一键复制 Agent 指令。',
+    goal: '打开电脑后的第一屏：选项目、看今天先做、复制指令给 AI。',
     stage: '进行中',
     stageLabel: '进行中',
     updatedLabel: '示例',
@@ -12,14 +12,14 @@
     dod: [
       { id: 't1', label: '扫描 projects/*/STATUS.md', done: false },
       { id: 't2', label: '页面显示真实下一步', done: false },
-      { id: 't3', label: '复制续做指令含真实 nextAction', done: false },
+      { id: 't3', label: '「接着做」指令含真实下一步', done: false },
     ],
   }
 
   const prompts = [
     {
       id: 'continue',
-      label: '继续做',
+      label: '接着做',
       hint: '只做下一步，不扩范围',
       template: function (p) {
         return '继续做项目「' + p.name + '」。只做这一件：' + p.nextAction + '。做完更新 STATUS 与 docs/log，不要扩散范围，不要做未授权的 push。'
@@ -28,7 +28,7 @@
     {
       id: 'verify',
       label: '验收',
-      hint: '按 DoD 逐项要证据',
+      hint: '按完成清单逐项要证据',
       template: function (p) {
         return '请对「' + p.name + '」按 PLAN/DoD 逐项验收。每项给出可观察证据；缺证据标 failed，不要报喜。当前下一步是：' + p.nextAction + '。'
       },
@@ -36,14 +36,14 @@
     {
       id: 'retro',
       label: '复盘',
-      hint: '写 log 与可复用经验',
+      hint: '记下经验与卡点',
       template: function (p) {
         return '对「' + p.name + '」做简短复盘：完成项、卡点、可复用经验写入 docs/log.md 与 lessons（如有）。不要虚构未做的事。'
       },
     },
     {
       id: 'handoff',
-      label: '交接',
+      label: '交班',
       hint: '给下一个会话的上下文',
       template: function (p) {
         return '交接「' + p.name + '」：目标是 ' + (p.goal || '') + ' 阶段=' + (p.stageLabel || p.stage || '') + '，下一步=' + p.nextAction + '。DoD 未完成项请列出。忽略无关工作区历史。'
@@ -150,7 +150,7 @@
     listEl.innerHTML = ''
     if (!dodState.length) {
       listEl.innerHTML =
-        '<li class="dod-item"><div class="dod-empty">该项目暂无 DoD 勾选项（STATUS / PLAN / spec 里没有 [ ] 条目）</div></li>'
+        '<li class="dod-item"><div class="dod-empty">这个项目还没有完成清单</div></li>'
     } else {
       dodState.forEach(function (item, index) {
         const li = document.createElement('li')
@@ -220,7 +220,7 @@
     if (updated) updated.textContent = p.updatedLabel || '—'
     if (next) {
       const hasNext = !!(p.nextAction && p.nextAction.trim())
-      next.textContent = hasNext ? p.nextAction : '还没写「下一步」— 用 python cli.py next "…" 补一条'
+      next.textContent = hasNext ? p.nextAction : '还没写「今天先做」— 在项目 STATUS 里补一条'
       next.classList.toggle('is-empty', !hasNext)
     }
     if (risk) {
@@ -296,16 +296,69 @@
     const next = $('slot-next')
     if (name) name.textContent = '没有可显示的项目'
     if (goal) {
-      goal.textContent = '在实验室根目录执行 python cli.py scan，或确认 projects/ 下存在 STATUS.md。'
+      goal.textContent = '先运行 python cli.py scan 扫一下项目，或确认 projects/ 里有 STATUS。'
     }
     if (next) {
-      next.textContent = '扫描后，这里只显示一条「下一步」'
+      next.textContent = '扫描后，这里只显示「今天先做」'
       next.classList.add('is-empty')
     }
     dodState = []
     renderDod()
     renderTimeline(null)
     renderGit(null)
+  }
+
+  function parseDay(s) {
+    if (!s) return null
+    const m = String(s).match(/(\d{4})-(\d{2})-(\d{2})/)
+    if (!m) return null
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+    return isNaN(d.getTime()) ? null : d
+  }
+
+  function projectStatusBadge(p) {
+    const stage = String((p && (p.stage || p.stageLabel)) || '')
+    if (/完成|交付|收尾|built|done|Pages 部署/i.test(stage)) return '已收尾'
+    if (/卡点|blocked|阻塞/i.test(stage)) return '被卡住'
+    let day = null
+    const tl = (p && p.timeline) || []
+    for (let i = 0; i < tl.length; i++) {
+      day = parseDay(tl[i].date)
+      if (day) break
+    }
+    if (!day) day = parseDay(p && p.updatedLabel)
+    if (!day) return '—'
+    const now = new Date()
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const diff = Math.round((start - day) / 86400000)
+    if (diff <= 1) return '今天'
+    if (diff <= 3) return '本周'
+    return '放一放'
+  }
+
+  function ensureOnboard() {
+    const el = $('slot-onboard')
+    const okBtn = $('slot-onboard-ok')
+    if (!el) return
+    const params = new URLSearchParams(window.location.search)
+    const force = params.get('onboard') === '1'
+    let seen = false
+    try {
+      seen = window.localStorage.getItem('seat.onboarded') === '1'
+    } catch (e) {
+      seen = false
+    }
+    el.hidden = !force && seen
+    if (okBtn) {
+      okBtn.addEventListener('click', function () {
+        try {
+          window.localStorage.setItem('seat.onboarded', '1')
+        } catch (e) {
+          /* ignore */
+        }
+        el.hidden = true
+      })
+    }
   }
 
   function renderProjectSwitcher() {
@@ -323,7 +376,11 @@
       b.type = 'button'
       b.className = 'proj-chip' + (p.id === active.id ? ' is-active' : '')
       b.setAttribute('aria-pressed', p.id === active.id ? 'true' : 'false')
-      b.textContent = p.name
+      const badge = projectStatusBadge(p)
+      b.innerHTML =
+        '<span class="proj-name"></span><span class="proj-badge"></span>'
+      b.querySelector('.proj-name').textContent = p.name
+      b.querySelector('.proj-badge').textContent = badge
       b.addEventListener('click', function () {
         setActive(p)
       })
@@ -379,7 +436,7 @@
         }
         const cmd = 'python cli.py log ' + JSON.stringify(text)
         copyText(cmd, logBtn)
-        say('已复制 log 命令，粘贴到终端执行写回')
+        say('已复制「记一笔」命令，粘到终端执行')
         if (input) input.value = ''
       })
     }
@@ -393,7 +450,7 @@
         a.download = 'writeback.json'
         a.click()
         URL.revokeObjectURL(url)
-        say('已下载 writeback.json — 放到 data/ 后执行 python cli.py apply')
+        say('已下载进度文件 — 放到 data/ 后执行 python cli.py apply')
       })
     }
 
@@ -413,7 +470,7 @@
         lines.push.apply(lines, checks)
         const cmd = lines.join(' && ') || 'python cli.py apply'
         copyText(cmd, copyBtn)
-        say('已复制写回命令序列')
+        say('已复制保存命令')
       })
     }
   }
@@ -459,6 +516,7 @@
     renderPrompts()
     bindEvents()
     bindWriteback()
+    ensureOnboard()
     const data = window.SEAT_DATA
     if (data && data.projects && data.projects.length) {
       projects = data.projects
